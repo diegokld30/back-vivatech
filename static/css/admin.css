@@ -1,0 +1,6 @@
+:root {
+  --primary: #2e7d32;   /* verde Vivatech */
+  --secondary: #ff9800; /* naranja */
+}
+#header { background: var(--primary); }
+a:link, a:visited, .module h2 { color: var(--primary); }
