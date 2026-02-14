@@ -2,8 +2,32 @@ from django.db import models
 from django.utils.text import slugify
 
 
+class Category(models.Model):
+    name = models.CharField(max_length=120)
+    slug = models.SlugField(unique=True, blank=True)
+
+    class Meta:
+        verbose_name = "categoría"
+        verbose_name_plural = "categorías"
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)[:50]
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.name
+
+
 class Product(models.Model):
     # ───── Datos principales ─────
+    category = models.ForeignKey(
+        Category,
+        related_name="products",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True
+    )
     name        = models.CharField(max_length=120)
     slug        = models.SlugField(unique=True, blank=True)
     cover = models.ImageField(
@@ -20,6 +44,8 @@ class Product(models.Model):
         upload_to="products/datasheets/",
         blank=True,
     )
+    video_url   = models.URLField(blank=True, null=True, help_text="URL de YouTube, Vimeo o TikTok")
+    specifications = models.JSONField(default=dict, blank=True, help_text="Especificaciones técnicas (clave-valor)")
 
     # ───── Control ─────
     is_active   = models.BooleanField(default=True)

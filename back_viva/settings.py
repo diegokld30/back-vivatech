@@ -23,7 +23,17 @@ environ.Env.read_env(BASE_DIR / ".env")
 DEBUG = env.bool("DEBUG")
 SECRET_KEY = env("SECRET_KEY")
 ALLOWED_HOSTS = env("ALLOWED_HOSTS").split(",") if env("ALLOWED_HOSTS") else ["*"]
-
+CORS_ALLOWED_ORIGINS = (
+    env("CORS_ALLOWED_ORIGINS").split(",")
+    if env("CORS_ALLOWED_ORIGINS")
+    else []
+)
+CORS_ALLOW_ALL_ORIGINS = True  # Para desarrollo local simplificado, o usar la lista de arriba
+CSRF_TRUSTED_ORIGINS = (
+    env("CSRF_TRUSTED_ORIGINS").split(",")
+    if env("CSRF_TRUSTED_ORIGINS")
+    else []
+)
 # ────────────────────────────────────────────────────────────
 # Aplicaciones
 # ────────────────────────────────────────────────────────────
@@ -50,12 +60,13 @@ LOCAL_APPS = [
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY + LOCAL_APPS
-INSTALLED_APPS += ["corsheaders"]
+INSTALLED_APPS += ["corsheaders", "ckeditor", "django_json_widget"]
 
 # ────────────────────────────────────────────────────────────
 # Middleware y BASICS
 # ────────────────────────────────────────────────────────────
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -146,3 +157,12 @@ SPECTACULAR_SETTINGS = {
 
 # ────────────────────────────────────────────────────────────
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# CKEditor Settings
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'full',
+        'height': 300,
+        'width': '100%',
+    },
+}

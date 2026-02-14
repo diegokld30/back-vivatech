@@ -16,10 +16,10 @@ urlpatterns = [
     path("api/docs/", SpectacularSwaggerView.as_view(url_name="schema")),
 
     # ─── Endpoints por app ───
-    path("api/productos/", include("apps.catalog.api.router")),
     path("api/clientes/", include("apps.clients.api.router")),
     path("api/posts/", include("apps.blog.api.router")),
     path("api/faqs/", include("apps.core.api.router")),
+    path("api/", include("apps.catalog.api.router")), # Maneja /productos/ y /categorias/
 ]
 
 # Servir media y static en DEBUG

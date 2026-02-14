@@ -1,8 +1,9 @@
 from rest_framework.routers import DefaultRouter
-from .views import ProductViewSet
+from .views import ProductViewSet, CategoryViewSet
 
 router = DefaultRouter()
-#  /api/productos/…  (lista)   y  /api/productos/{id}/ (detalle)
-router.register("", ProductViewSet, basename="producto")
+#  /api/productos/…  y  /api/categorias/…
+router.register("productos", ProductViewSet, basename="producto")
+router.register("categorias", CategoryViewSet, basename="categoria")
 
 urlpatterns = router.urls          # <— permitirá include(router)
