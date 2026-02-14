@@ -20,3 +20,17 @@ class BlogPost(models.Model):
 
     def __str__(self):
         return self.title
+
+class BlogSidebarImage(models.Model):
+    title = models.CharField(max_length=100, blank=True, help_text="Texto Alt para la imagen")
+    image = models.ImageField(upload_to="blog/sidebar/", help_text="Imagen para el carrusel lateral")
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "Imagen Lateral Blog"
+        verbose_name_plural = "Imágenes Lateral Blog"
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return self.title or f"Imagen {self.id}"
