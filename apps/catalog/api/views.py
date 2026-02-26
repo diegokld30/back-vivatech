@@ -19,8 +19,11 @@ class ProductViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         qs = super().get_queryset()
         category_slug = self.request.query_params.get("category", None)
+        product_slug = self.request.query_params.get("slug", None)
         if category_slug:
             qs = qs.filter(category__slug=category_slug)
+        if product_slug:
+            qs = qs.filter(slug=product_slug)
         return qs
 
 
