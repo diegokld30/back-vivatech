@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Product, ProductImage, Category
+from .models import Product, ProductImage, Category, ProductCarouselImage
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
@@ -28,3 +28,10 @@ class ProductAdmin(admin.ModelAdmin):
         models.TextField: {'widget': CKEditorWidget},
         models.JSONField: {'widget': JSONEditorWidget},
     }
+
+
+@admin.register(ProductCarouselImage)
+class ProductCarouselImageAdmin(admin.ModelAdmin):
+    list_display = ("title", "is_active", "order")
+    list_editable = ("is_active", "order")
+    list_filter = ("is_active",)

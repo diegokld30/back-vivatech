@@ -1,6 +1,6 @@
 from rest_framework import viewsets, permissions, filters
-from apps.catalog.models import Product, Category
-from .serializers import ProductSerializer, CategorySerializer
+from apps.catalog.models import Product, Category, ProductCarouselImage
+from .serializers import ProductSerializer, CategorySerializer, ProductCarouselImageSerializer
 
 class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
     queryset           = Category.objects.all()
@@ -22,3 +22,9 @@ class ProductViewSet(viewsets.ModelViewSet):
         if category_slug:
             qs = qs.filter(category__slug=category_slug)
         return qs
+
+
+class ProductCarouselImageViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = ProductCarouselImage.objects.filter(is_active=True)
+    serializer_class = ProductCarouselImageSerializer
+    permission_classes = [permissions.AllowAny]

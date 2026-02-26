@@ -46,6 +46,7 @@ class Product(models.Model):
     )
     video_url   = models.URLField(blank=True, null=True, help_text="URL de YouTube, Vimeo o TikTok")
     specifications = models.JSONField(default=dict, blank=True, help_text="Especificaciones técnicas (clave-valor)")
+    hide_price  = models.BooleanField(default=False, verbose_name="Ocultar precio")
 
     # ───── Control ─────
     is_active   = models.BooleanField(default=True)
@@ -84,3 +85,22 @@ class ProductImage(models.Model):
 
     def __str__(self):
         return f"{self.product.name} – #{self.id}"
+
+
+class ProductCarouselImage(models.Model):
+    """
+    Imágenes para el slider principal de la sección de productos.
+    """
+    title = models.CharField(max_length=120, blank=True)
+    image = models.ImageField(upload_to="products/carousel/")
+    link = models.URLField(blank=True, null=True, help_text="Enlace opcional al hacer clic")
+    is_active = models.BooleanField(default=True)
+    order = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ["order"]
+        verbose_name = "imagen carrusel productos"
+        verbose_name_plural = "imágenes carrusel productos"
+
+    def __str__(self):
+        return self.title or f"Imagen #{self.id}"
