@@ -1,7 +1,6 @@
 # apps/clients/api/serializers.py
 from rest_framework import serializers
-from apps.clients.models import Client, ClientImage
-
+from apps.clients.models import Client, ClientImage, ProjectBanner
 
 
 class ClientImageSerializer(serializers.ModelSerializer):
@@ -15,9 +14,10 @@ class ClientImageSerializer(serializers.ModelSerializer):
         model  = ClientImage
         fields = ["id", "image", "alt"]
 
+
 class ClientSerializer(serializers.ModelSerializer):
-    logo   = serializers.SerializerMethodField()
-    cover  = serializers.SerializerMethodField()
+    logo    = serializers.SerializerMethodField()
+    cover   = serializers.SerializerMethodField()
     gallery = ClientImageSerializer(many=True, read_only=True)
 
     def _abs(self, filefield):
@@ -30,3 +30,18 @@ class ClientSerializer(serializers.ModelSerializer):
     class Meta:
         model  = Client
         fields = "__all__"
+
+
+class ProjectBannerSerializer(serializers.ModelSerializer):
+    image = serializers.SerializerMethodField()
+
+    def get_image(self, obj):
+        if not obj.image:
+            return None
+        request = self.context.get("request")
+        return request.build_absolute_uri(obj.image.url)
+
+    class Meta:
+        model  = ProjectBanner
+        fields = ["id", "title", "description", "image", "video_url",
+                  "is_active", "order", "created_at"]
