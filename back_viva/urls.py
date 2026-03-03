@@ -19,6 +19,7 @@ urlpatterns = [
     path("api/clientes/", include("apps.clients.api.router")),
     path("api/blog/", include("apps.blog.api.router")),
     path("api/faqs/", include("apps.core.api.router")),
+    path("api/about/", include("apps.about.api.router")),
     path("api/", include("apps.catalog.api.router")), # Maneja /productos/ y /categorias/
 ]
 
