@@ -15,6 +15,15 @@ env = environ.Env(
     SECRET_KEY=(str, "change-me"),
     ALLOWED_HOSTS=(str, ""),
     DATABASE_URL=(str, f"sqlite:///{BASE_DIR/'db.sqlite3'}"),
+    CORS_ALLOW_ALL_ORIGINS=(bool, False),
+    SECURE_SSL_REDIRECT=(bool, False),
+    SESSION_COOKIE_SECURE=(bool, True),
+    CSRF_COOKIE_SECURE=(bool, True),
+    SECURE_HSTS_SECONDS=(int, 31536000),
+    SECURE_HSTS_INCLUDE_SUBDOMAINS=(bool, True),
+    SECURE_HSTS_PRELOAD=(bool, True),
+    SECURE_PROXY_SSL_HEADER=(str, "HTTP_X_FORWARDED_PROTO,https"),
+    USE_X_FORWARDED_HOST=(bool, True),
 )
 
 # Cargar .env si existe
@@ -28,7 +37,7 @@ CORS_ALLOWED_ORIGINS = (
     if env("CORS_ALLOWED_ORIGINS")
     else []
 )
-CORS_ALLOW_ALL_ORIGINS = True  # Para desarrollo local simplificado, o usar la lista de arriba
+CORS_ALLOW_ALL_ORIGINS = env.bool("CORS_ALLOW_ALL_ORIGINS")
 CSRF_TRUSTED_ORIGINS = (
     env("CSRF_TRUSTED_ORIGINS").split(",")
     if env("CSRF_TRUSTED_ORIGINS")
@@ -167,3 +176,16 @@ CKEDITOR_CONFIGS = {
         'width': '100%',
     },
 }
+
+# Seguridad detrás de proxy reverso (Nginx/LB)
+SECURE_SSL_REDIRECT = env.bool("SECURE_SSL_REDIRECT")
+SESSION_COOKIE_SECURE = env.bool("SESSION_COOKIE_SECURE")
+CSRF_COOKIE_SECURE = env.bool("CSRF_COOKIE_SECURE")
+SECURE_HSTS_SECONDS = env.int("SECURE_HSTS_SECONDS")
+SECURE_HSTS_INCLUDE_SUBDOMAINS = env.bool("SECURE_HSTS_INCLUDE_SUBDOMAINS")
+SECURE_HSTS_PRELOAD = env.bool("SECURE_HSTS_PRELOAD")
+USE_X_FORWARDED_HOST = env.bool("USE_X_FORWARDED_HOST")
+_secure_proxy_ssl_header = env("SECURE_PROXY_SSL_HEADER")
+if _secure_proxy_ssl_header and "," in _secure_proxy_ssl_header:
+    _header_name, _header_value = [part.strip() for part in _secure_proxy_ssl_header.split(",", 1)]
+    SECURE_PROXY_SSL_HEADER = (_header_name, _header_value)
