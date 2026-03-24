@@ -1,4 +1,6 @@
 from django.contrib import admin
+from django.db import models
+from ckeditor.widgets import CKEditorWidget
 from .models import Client, ClientImage, ProjectBanner
 
 
@@ -10,6 +12,9 @@ class ClientImageInline(admin.TabularInline):
 @admin.register(Client)
 class ClientAdmin(admin.ModelAdmin):
     list_display  = ("name", "location", "is_active", "created_at")
+    formfield_overrides = {
+        models.TextField: {"widget": CKEditorWidget},
+    }
     list_filter   = ("is_active",)
     search_fields = ("name", "location", "testimonial", "content")
     prepopulated_fields = {"slug": ("name",)}
